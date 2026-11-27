@@ -10,8 +10,8 @@ import {
   SyncResponseSchema,
   toBinary,
 } from '@actual-app/crdt';
-import type { Request, Response } from 'express';
 import express from 'express';
+import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 import { getAccountDb, isAdmin } from './account-db';
@@ -607,6 +607,7 @@ app.post('/delete-user-file', (req, res) => {
 
   accountDb.transaction(() => {
     filesService.update(file.id, new FileUpdate({ deleted: true }));
+    UserService.revokeApiKeysWithoutBudgetAccess();
     for (const name of Object.values(SecretName)) {
       secretsService.reset(name, file.id);
     }

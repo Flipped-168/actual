@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import type { EnableBankingTransaction } from '#app-enablebanking/services/enablebanking-service';
 import {
   isImportableTransaction,
   normalizeAccount,
@@ -8,6 +7,7 @@ import {
   normalizeTransaction,
   normalizeTransactions,
 } from '#app-enablebanking/services/enablebanking-service';
+import type { EnableBankingTransaction } from '#app-enablebanking/services/enablebanking-service';
 
 import {
   mockBalance,
@@ -144,6 +144,15 @@ describe('normalizeTransaction', () => {
     const result = normalizeTransaction(mockPendingTransaction);
     expect(result.booked).toBe(false);
     expect(result.transactionId).toBe('tx-003');
+  });
+
+  it.each([
+    ['HOLD', false],
+    ['SCHD', false],
+    ['OTHR', true],
+  ] as const)('should mark %s transactions as booked: %s', (status, booked) => {
+    const result = normalizeTransaction({ ...mockCreditTransaction, status });
+    expect(result.booked).toBe(booked);
   });
 
   it('should preserve original sign when credit_debit_indicator is absent', () => {

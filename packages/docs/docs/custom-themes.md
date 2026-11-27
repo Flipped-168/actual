@@ -66,15 +66,54 @@ Example using variables:
 }
 ```
 
+### Changing the Accent Color
+
+The accent is the color of primary buttons, links, checkboxes, the outline of a focused input, selected rows and the selected item in the sidebar. You can change all of them by setting one variable:
+
+```css
+:root {
+  --color-accent: #0a7d5a;
+}
+```
+
+Actual works out the related colors from the accent and from your theme's table and page backgrounds, so text and buttons stay readable on them:
+
+- `--color-accentContrast` - Text and icons on an accent fill
+- `--color-accentHover` - Hovered accent fill
+- `--color-accentText` - The accent used as text, such as links
+- `--color-accentBorder` - Selected outlines and focus rings
+- `--color-accentSubtle` - Tinted background for selected rows and pills
+- `--color-accentSubtleText` - Accent text on the tinted background
+
+You can set any of these yourself. Actual keeps your value and only works out the ones you leave out. The tinted background and its text are a pair, so if you set `--color-accentSubtle`, also set `--color-accentSubtleText` to a color that is readable on it. A more specific variable, such as `--color-buttonPrimaryBackground`, still takes priority over the accent for the thing it styles.
+
+Accent text that sits on its own background, such as the selected sidebar item on `--color-sidebarBackground`, is worked out against that background. The text on the selected day in the date picker, `--color-calendarSelectedText`, is white when white is readable on `--color-calendarSelectedBackground` and black when it is not. A partly transparent `--color-calendarSelectedBackground` is measured as it appears over `--color-calendarBackground`.
+
 ### Available CSS Variables
 
-Custom themes can override any of the CSS variables defined in Actual's base themes. These variables correspond to the theme color keys found in the theme files:
-
-- `packages/desktop-client/src/style/themes/light.ts`
-- `packages/desktop-client/src/style/themes/dark.ts`
-- `packages/desktop-client/src/style/themes/midnight.ts`
+Custom themes can override any of the CSS variables defined in Actual's base themes. These variables correspond to the token names in the theme source file, `packages/component-library/src/themes/source/colors.ts`.
 
 Common variables include:
+
+**Accent Colors:**
+
+- `--color-accent` - Primary buttons, links, focus rings and selection. See [Changing the Accent Color](#changing-the-accent-color)
+
+**Base Colors:**
+
+A few of the variables below follow these base colors when a theme does not set them: the page and table backgrounds, the menu and tooltip backgrounds, table borders, and page and table text. Many other variables keep their own colors, including most cards and buttons, modals, form inputs and menu text, so a theme still needs to set those.
+
+Do not point a base color at a variable that follows it, such as `--color-background: var(--color-tableBackground)`. The two would refer to each other and neither would work.
+
+- `--color-backgroundPage` - The page behind cards and tables
+- `--color-background` - Tables and other content surfaces
+- `--color-backgroundRaised` - Menus and tooltips
+- `--color-backgroundHover` - A hovered table row
+- `--color-backgroundSelected` - A selected table row
+- `--color-border` - Lines between table rows
+- `--color-text` - Primary text
+- `--color-textSecondary` - Supporting text such as descriptions
+- `--color-textTertiary` - The least prominent text, such as hints
 
 **Page Colors:**
 

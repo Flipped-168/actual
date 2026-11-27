@@ -28,6 +28,13 @@ export function validateStart(
       dateStart = start + '-01-01';
       fallbackEnd = monthUtils.addDays(dateStart, 1095);
       break;
+    case 'Weekly':
+      dateStart = start;
+      fallbackEnd = monthUtils.getWeekEnd(
+        monthUtils.addDays(dateStart, 180),
+        firstDayOfWeekIdx,
+      );
+      break;
     case 'Daily':
       dateStart = start;
       fallbackEnd = monthUtils.addDays(dateStart, 6);
@@ -77,6 +84,14 @@ export function validateEnd(
       dateEnd = end + '-12-31';
       fallbackStart = monthUtils.subDays(dateEnd, 1095);
       break;
+    case 'Weekly':
+      // The picked value is the first day of the week; include the whole week.
+      dateEnd = monthUtils.getWeekEnd(end, firstDayOfWeekIdx);
+      fallbackStart = monthUtils.weekFromDate(
+        monthUtils.subDays(dateEnd, 180),
+        firstDayOfWeekIdx,
+      );
+      break;
     case 'Daily':
       dateEnd = end;
       fallbackStart = monthUtils.subDays(dateEnd, 6);
@@ -106,7 +121,7 @@ export function validateRange(
   start: string,
   end: string,
 ): [string, string] {
-  if (start < earliest) {
+  if (start < earliest && earliest <= end) {
     start = earliest;
   }
 
